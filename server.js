@@ -1,4 +1,67 @@
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const path = require("path");
+require("dotenv").config();
 
+// Import Routes
+const loginRoutes = require("./routes/LoginRoutes");
+const signUpRoutes = require("./routes/SignUpRoutes");
+const PostRouter = require("./routes/PostRouter");
+
+const app = express();
+const port = process.env.PORT || 5000;
+
+// CORS Setup
+const allowedOrigins = ["https://athletelink-frontend.onrender.com"];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
+
+app.use(express.json());
+
+// Connect MongoDB
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => {
+    console.error("Failed to connect to MongoDB", err);
+    process.exit(1);
+  });
+
+// API Routes
+app.use("/api/", loginRoutes);
+app.use("/api/", signUpRoutes);
+app.use("/api/", PostRouter);
+
+//  Serve React Frontend
+const __dirname1 = path.resolve();
+app.use(express.static(path.join(__dirname1, "client", "build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname1, "client", "build", "index.html"));
+});
+
+// Start Server
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
+
+
+
+{/* 
 const loginRoutes = require("./routes/LoginRoutes");
 const signUpRoutes = require("./routes/SignUpRoutes");
 const PostRouter = require('./routes/PostRouter')
@@ -61,3 +124,4 @@ app.use("/api/" , PostRouter);
 app.use("/api/" , PostRouter);
 app.use("/api/" ,PostRouter )
 
+ */}
