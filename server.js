@@ -10,12 +10,34 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors({origin: ['http://localhost:5000', 'https://athletink-bak.onrender.com'],
 
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type']
- }));
+const allowedOrigins = ['https://athletelink-frontend.onrender.com']; // Replace with actual frontend domain(s)
 
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], 
+  allowedHeaders: ['Content-Type', 'Authorization'], 
+  credentials: true 
+}));
+
+
+app.options('*', (req, res) => {
+  if (allowedOrigins.includes(req.header('Origin'))) {
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.sendStatus(200);
+  } else {
+    res.sendStatus(403);
+  }
+});
+
+app.use(express.json());
 app.use(express.json());  
 
 

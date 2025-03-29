@@ -55,56 +55,6 @@ router.post('/signup', async (req, res) => {
     res.status(500).json({ message: 'Server error, please try signing up again.', error: error.message });
   }
 });
-
-
-
-
-
-
-
-
-
-{/*   
-
-router.post('/signup', async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    
-    const existingUser = await User.findOne({ email });
-    if (existingUser ) {
-      return res.status(400).json({ message: 'Email already exists' });
-    }
-
-
-    const otp = crypto.randomInt(100000, 999999).toString();
-
-
-    const newUser = new User({ email, password, otp, isVerified: false });
-    await newUser.save();
-       
-
-    const mailOptions = {
-      from: 'yogeshjat23nith@gmail.com',
-      to: email,
-      subject: 'Your Verification Code',
-      text: `Your verification code is: ${otp}`,
-    }; 
-    
-
-    await transporter.sendMail(mailOptions); 
-    
-
-
-    res.status(201).json({ message: 'Signup successful. Please verify your email using the code sent to you.' });
-  } catch (error) {
-    await User.findOneAndDelete({ email });
-    res.status(500).json({ message: 'Server error', error: error.message });
-    
-  }
-}); 
-  
-*/}
 router.post('/verify-otp', async (req, res) => {
   const { email, otp } = req.body;
 
