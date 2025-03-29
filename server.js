@@ -7,13 +7,13 @@ require("dotenv").config();
 // Import Routes
 const loginRoutes = require("./routes/LoginRoutes");
 const signUpRoutes = require("./routes/SignUpRoutes");
-const PostRouter = require("./routes/PostRouter");
+const postRouter = require("./routes/PostRouter");
 
 const app = express();
 const port = process.env.PORT || 5000;
 
 // CORS Setup
-const allowedOrigins = ["https://athletelink-frontend.onrender.com"];
+const allowedOrigins = ["https://athletelink-frontend.onrender.com"]; // Your frontend domain
 
 app.use(
   cors({
@@ -32,7 +32,7 @@ app.use(
 
 app.use(express.json());
 
-// Connect MongoDB
+// MongoDB Connection
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => console.log("MongoDB connected"))
@@ -44,17 +44,18 @@ mongoose
 // API Routes
 app.use("/api/", loginRoutes);
 app.use("/api/", signUpRoutes);
-app.use("/api/", PostRouter);
+app.use("/api/", postRouter);
 
-//  Serve React Frontend
-const __dirname1 = path.resolve();
-app.use(express.static(path.join(__dirname1, "client", "build")));
+// Serve React Frontend
+const __dirname1 = path.resolve(); // Resolves to the root directory
+app.use(express.static(path.join(__dirname1, "frontend", "build"))); // Serve static files from the React build folder
 
+// Fallback to React's index.html for all other routes (important for client-side routing)
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname1, "client", "build", "index.html"));
+  res.sendFile(path.join(__dirname1, "frontend", "build", "index.html"));
 });
 
-// Start Server
+// Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
