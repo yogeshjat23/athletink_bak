@@ -10,7 +10,7 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors({origin: ['http://localhost:3000', 'https://athletink-bak.onrender.com'],
+app.use(cors({origin: ['http://localhost:5000', 'https://athletink-bak.onrender.com'],
 
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type']
