@@ -48,11 +48,11 @@ app.use("/api/", postRouter);
 
 // Serve React Frontend
 const __dirname1 = path.resolve(); // Resolves to the root directory
-app.use(express.static(path.join(__dirname1, "frontend", "build"))); // Serve static files from the React build folder
+app.use(express.static(path.join(__dirname1, "build"))); // Serve static files from the React build folder
 
 // Fallback to React's index.html for all other routes (important for client-side routing)
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname1, "frontend", "build", "index.html"));
+  res.sendFile(path.join(__dirname1,"build", "index.html"));
 });
 
 // Start the server
